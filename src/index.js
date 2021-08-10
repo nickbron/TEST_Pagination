@@ -46,7 +46,7 @@ const refs = {
   buttonLoadMore: document.querySelector('.load-more'),
 };
 
-refs.buttonLoadMore.addEventListener('click', OnMore);
+//refs.buttonLoadMore.addEventListener('click', OnMore);
 refs.searchForm.addEventListener('submit', onSearch);
 
 async function onSearch(e) {
@@ -94,12 +94,12 @@ async function onSearch(e) {
     //-----------------------------------------------------------------------
 
     if (totalHits > 0) {
-      refs.buttonLoadMore.classList.remove('is-hidden');
+      // refs.buttonLoadMore.classList.remove('is-hidden');
       renderCardsimages(cards);
       Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
       lightbox.refresh();
     } else {
-      refs.buttonLoadMore.classList.add('is-hidden');
+      //refs.buttonLoadMore.classList.add('is-hidden');
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.',
       );
