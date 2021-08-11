@@ -4,8 +4,10 @@ import Notiflix from 'notiflix';
 import cardsTpl from './templates/cards.hbs';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.css';
-import Pagination from 'tui-pagination';
-import 'tui-pagination/dist/tui-pagination.css';
+// import Pagination from 'tui-pagination';
+// import 'tui-pagination/dist/tui-pagination.css';
+import fetchCountries from './js/pagination';
+import fPagination from './js/pagination';
 //import { Spinner } from 'spin.js';
 // import { pagination} from "pagination.js"
 
@@ -13,32 +15,32 @@ let lightbox = new SimpleLightbox('.gallery a');
 let pageNumber;
 let name;
 
-const optionsTui = {
-  // below default value of options
-  totalItems: 100,
-  itemsPerPage: 10,
-  visiblePages: 10,
-  page: 1,
-  centerAlign: true,
-  firstItemClassName: 'tui-first-child',
-  lastItemClassName: 'tui-last-child',
-  template: {
-    page: '<a href="#" class="tui-page-btn">{{page}}</a>',
-    currentPage: '<strong class="tui-page-btn tui-is-selected">{{page}}</strong>',
-    moveButton:
-      '<a href="#" class="tui-page-btn tui-{{type}}">' +
-      '<span class="tui-ico-{{type}}">{{type}}</span>' +
-      '</a>',
-    disabledMoveButton:
-      '<span class="tui-page-btn tui-is-disabled tui-{{type}}">' +
-      '<span class="tui-ico-{{type}}">{{type}}</span>' +
-      '</span>',
-    moreButton:
-      '<a href="#" class="tui-page-btn tui-{{type}}-is-ellip">' +
-      '<span class="tui-ico-ellip">...</span>' +
-      '</a>',
-  },
-};
+// const optionsTui = {
+//   // below default value of options
+//   totalItems: 100,
+//   itemsPerPage: 10,
+//   visiblePages: 10,
+//   page: 1,
+//   centerAlign: true,
+//   firstItemClassName: 'tui-first-child',
+//   lastItemClassName: 'tui-last-child',
+//   template: {
+//     page: '<a href="#" class="tui-page-btn">{{page}}</a>',
+//     currentPage: '<strong class="tui-page-btn tui-is-selected">{{page}}</strong>',
+//     moveButton:
+//       '<a href="#" class="tui-page-btn tui-{{type}}">' +
+//       '<span class="tui-ico-{{type}}">{{type}}</span>' +
+//       '</a>',
+//     disabledMoveButton:
+//       '<span class="tui-page-btn tui-is-disabled tui-{{type}}">' +
+//       '<span class="tui-ico-{{type}}">{{type}}</span>' +
+//       '</span>',
+//     moreButton:
+//       '<a href="#" class="tui-page-btn tui-{{type}}-is-ellip">' +
+//       '<span class="tui-ico-ellip">...</span>' +
+//       '</a>',
+//   },
+// };
 
 const refs = {
   searchForm: document.querySelector('.search-form'),
@@ -46,7 +48,7 @@ const refs = {
   buttonLoadMore: document.querySelector('.load-more'),
 };
 
-//refs.buttonLoadMore.addEventListener('click', OnMore);
+refs.buttonLoadMore.addEventListener('click', ScrollTop);
 refs.searchForm.addEventListener('submit', onSearch);
 
 async function onSearch(e) {
@@ -76,10 +78,12 @@ async function onSearch(e) {
     clearimagesContainer();
 
     const totalHits = cards.totalHits;
-    //_____________________________________________________________________
-    const container = document.getElementById('tui-pagination-container');
-    const instance = new Pagination(container, optionsTui);
+    //___________ПАГИНАЦИЯ__________________________________________________________
+    // const container = document.getElementById('tui-pagination-container');
+    // const instance = new Pagination(container, optionsTui);
     // instance.reset();
+
+    const instance = fPagination();
     instance.setTotalItems(totalHits);
     instance.getCurrentPage(pageNumber);
     // instance.movePageTo(10);
@@ -88,28 +92,25 @@ async function onSearch(e) {
     instance.on('afterMove', event => {
       OnMore();
       const currentPage = event.page;
-      console.log(currentPage);
+      console.log('currentPage', currentPage);
     });
 
     //-----------------------------------------------------------------------
 
     if (totalHits > 0) {
-      // refs.buttonLoadMore.classList.remove('is-hidden');
+      refs.buttonLoadMore.classList.remove('is-hidden');
       renderCardsimages(cards);
       Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
       lightbox.refresh();
-
     } else {
-      //refs.buttonLoadMore.classList.add('is-hidden');
+      refs.buttonLoadMore.classList.add('is-hidden');
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.',
       );
-
     }
   } catch (error) {
     console.log(error);
   }
-
 }
 
 function renderCardsimages(cards) {
@@ -145,4 +146,8 @@ async function OnMore() {
     top: cardHeight * 2,
     behavior: 'smooth',
   });
+}
+
+function ScrollTop() {
+  window.scroll({ top: 0, behavior: 'smooth' });
 }
