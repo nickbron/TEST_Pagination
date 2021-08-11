@@ -7,7 +7,7 @@ import 'simplelightbox/dist/simple-lightbox.css';
 import Pagination from 'tui-pagination';
 import 'tui-pagination/dist/tui-pagination.css';
 //import { Spinner } from 'spin.js';
-//import { pagination} from "pagination.js"
+// import { pagination} from "pagination.js"
 
 let lightbox = new SimpleLightbox('.gallery a');
 let pageNumber;
@@ -98,15 +98,18 @@ async function onSearch(e) {
       renderCardsimages(cards);
       Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
       lightbox.refresh();
+
     } else {
       //refs.buttonLoadMore.classList.add('is-hidden');
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.',
       );
+
     }
   } catch (error) {
     console.log(error);
   }
+
 }
 
 function renderCardsimages(cards) {
@@ -143,4 +146,3 @@ async function OnMore() {
     behavior: 'smooth',
   });
 }
-//-=-----------------------------
